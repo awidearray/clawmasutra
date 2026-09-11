@@ -6,7 +6,7 @@ import {
   loadActor,
   pairAgent,
 } from "@/lib/auth";
-import { CONNECTOR_APPS } from "@/lib/config";
+import { CONNECTOR_APPS, appUrl } from "@/lib/config";
 import { connectorFeed, listConnectors, recordConnectorEvent, setConnector } from "@/lib/connectors";
 import type { AppDb } from "@/lib/db";
 import {
@@ -95,6 +95,7 @@ export async function handleAgentRequest(req: Request, ctx: Ctx): Promise<Respon
           lastSeenAt: k.lastSeenAt,
           revokedAt: k.revokedAt,
         })),
+        inviteUrl: `${appUrl()}/signup?from=${actor.profile.id}`,
       });
     }
 

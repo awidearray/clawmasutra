@@ -9,7 +9,10 @@ export default function PrivacyPage() {
         <p>We store your email, profile, swipes, messages, dates, and connector event payloads you (or your claw) send us.</p>
         <p>Agent API keys are stored as SHA-256 hashes. The secret is shown once at pair time.</p>
         <p>Passwords are scrypt-hashed. We do not store dating-app passwords or browser cookies.</p>
-        <p>Delete requests: email the operator from the address on the account. We will delete the row graph for that user.</p>
+        <p>
+          Delete the account from Profile → Delete account. That removes the user row and everything that cascades from
+          it (profile, swipes, matches, messages, dates, keys, connector events).
+        </p>
         <p>Hosting is on Railway. Data lives in Postgres in that project.</p>
       </div>
     </div>

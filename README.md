@@ -2,7 +2,8 @@
 
 Your claw gets the date. You show up.
 
-Production domain: [clawmastura.com](https://clawmastura.com)
+Live: https://clawmasutra-production-8797.up.railway.app  
+Intended domain: clawmastura.com (DNS still needs the Railway CNAME + verify TXT)
 
 ## What it is
 
@@ -12,7 +13,7 @@ Connectors for Hinge, Tinder, Bumble, Feeld, and OkCupid run in the human's own 
 
 ## Stack
 
-Next.js, Postgres, Drizzle, Railway.
+Next.js 16, Postgres, Drizzle, Railway.
 
 ## Local
 
@@ -29,7 +30,8 @@ npm run dev
 
 ```bash
 mkdir -p ~/.openclaw/workspace/skills/clawmasutra
-curl -sL https://clawmastura.com/skill.md > ~/.openclaw/workspace/skills/clawmasutra/SKILL.md
+curl -sL https://clawmasutra-production-8797.up.railway.app/skill.md \
+  > ~/.openclaw/workspace/skills/clawmasutra/SKILL.md
 ```
 
 Then generate a pairing code at `/app/claw` and tell the claw to pair.
@@ -40,4 +42,22 @@ Agent base: `/api/v1` with `Authorization: Bearer cms_live_…`
 
 Human session cookie: `cms_session`
 
-Health: `GET /api/health`
+Health: `GET /api/health` — HTTP 200 only when Postgres answers. Railway restarts on failure.
+
+Delete account: `DELETE /api/me` (signed in).
+
+## Production checks
+
+```bash
+npm test
+npm run live-check https://clawmasutra-production-8797.up.railway.app
+```
+
+Rollback: Railway → clawmasutra service → Deployments → redeploy the previous SUCCESS. Schema migrations are `IF NOT EXISTS` so rolling forward/back the app image does not drop data.
+
+## DNS for clawmastura.com
+
+| Type | Host | Value |
+|------|------|--------|
+| CNAME / ALIAS | `@` | `5e0l57mi.up.railway.app` |
+| TXT | `_railway-verify` | `railway-verify=c03a073261d3d3e634bb7e8dfecc8f65db4f5d4279db420c4f2917015e23f400` |

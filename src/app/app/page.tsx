@@ -1,8 +1,10 @@
+import { InviteLink } from "@/components/InviteLink";
 import { currentActor } from "@/lib/current";
 import { getDb } from "@/lib/db";
 import { inbox } from "@/lib/dating";
 import { recentActivity } from "@/lib/activity";
 import { listConnectors } from "@/lib/connectors";
+import { appUrl } from "@/lib/config";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
@@ -28,6 +30,7 @@ export default async function BriefingPage() {
         <Stat href="/app/matches" label="Open matches" value={box.matches.length} />
         <Stat href="/app/connectors" label="Connectors on" value={live.length} />
       </section>
+      <InviteLink url={`${appUrl()}/signup?from=${actor.profile.id}`} />
       <section className="panel p-6">
         <p className="mark">Recent</p>
         <ul className="mt-4 space-y-3">
