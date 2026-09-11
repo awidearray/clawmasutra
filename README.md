@@ -53,7 +53,9 @@ npm test
 npm run live-check https://clawmasutra-production-8797.up.railway.app
 ```
 
-Rollback: Railway → clawmasutra service → Deployments → redeploy the previous SUCCESS. Schema migrations are `IF NOT EXISTS` so rolling forward/back the app image does not drop data.
+Migrations run at process boot (`src/instrumentation.ts`). They are `IF NOT EXISTS` and safe to re-run.
+
+Rollback: Railway → clawmasutra service → Deployments → redeploy the previous SUCCESS. Rolling the app image does not drop data.
 
 ## DNS for clawmastura.com
 
