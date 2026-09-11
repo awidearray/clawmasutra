@@ -241,7 +241,13 @@ async function executeSwipe(
     await db.update(matches).set({ unmatchedAt: null, createdAt: now }).where(eq(matches.id, existingMatch[0].id));
     matchRow.id = existingMatch[0].id;
   } else {
-    await db.insert(matches).values(matchRow);
+    await db.insert(matches).values(matchRow).onConflictDoNothing();
+    const created = await db
+      .select()
+      .from(matches)
+      .where(and(eq(matches.aProfileId, a), eq(matches.bProfileId, b)))
+      .limit(1);
+    if (created[0]) matchRow.id = created[0].id;
   }
   await db.insert(messages).values({
     id: id("msg"),
@@ -416,7 +422,16 @@ export async function decideDate(
 
 export async function unmatch(db: AppDb, actor: Actor, matchId: string, now = new Date()) {
   const { match } = await getMatch(db, actor, matchId);
+  const otherId = match.aProfileId === actor.profile.id ? match.bProfileId : match.aProfileId;
   await db.update(matches).set({ unmatchedAt: now }).where(eq(matches.id, match.id));
+  await db
+    .delete(swipes)
+    .where(
+      or(
+        and(eq(swipes.fromProfileId, actor.profile.id), eq(swipes.toProfileId, otherId)),
+        and(eq(swipes.fromProfileId, otherId), eq(swipes.toProfileId, actor.profile.id)),
+      ),
+    );
   await logActivity(db, actor.user.id, "unmatch", "Unmatched", { matchId }, now);
 }
 

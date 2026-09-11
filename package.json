@@ -9,15 +9,16 @@
     "lint": "eslint",
     "test": "vitest run",
     "test:watch": "vitest",
-    "migrate": "node scripts/migrate.mjs"
+    "migrate": "node scripts/migrate.mjs",
+    "live-check": "node scripts/live-check.mjs"
   },
   "dependencies": {
-    "drizzle-orm": "^0.45.2",
+    "drizzle-orm": "0.45.2",
     "next": "16.3.4",
-    "postgres": "^3.4.9",
+    "postgres": "3.4.9",
     "react": "19.2.8",
     "react-dom": "19.2.8",
-    "zod": "^4.6.2"
+    "zod": "4.6.2"
   },
   "devDependencies": {
     "@electric-sql/pglite": "^0.5.8",

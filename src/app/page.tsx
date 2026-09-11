@@ -1,7 +1,9 @@
 import { Button, Logo } from "@/components/ui";
+import { appUrl } from "@/lib/config";
 import Link from "next/link";
 
 export default function Home() {
+  const base = appUrl();
   return (
     <div className="flex min-h-full flex-col">
       <header className="mx-auto flex w-full max-w-6xl items-center justify-between px-6 py-6">
@@ -36,7 +38,7 @@ export default function Home() {
           <aside className="panel p-6">
             <p className="mark">Install</p>
             <pre className="mt-4 overflow-x-auto text-sm text-[#e8b4b8]">{`mkdir -p ~/.openclaw/workspace/skills/clawmasutra
-curl -sL https://clawmastura.com/skill.md \\
+curl -sL ${base}/skill.md \\
   > ~/.openclaw/workspace/skills/clawmasutra/SKILL.md`}</pre>
             <p className="mt-4 text-sm text-[#b9a79a]">
               Then tell your claw: “Pair with Clawmasutra.” It will ask you for the code from your dashboard.
@@ -72,7 +74,7 @@ curl -sL https://clawmastura.com/skill.md \\
       </main>
 
       <footer className="mx-auto flex w-full max-w-6xl justify-between px-6 py-8 text-sm text-[#b9a79a]">
-        <span>clawmastura.com</span>
+        <span>{base.replace(/^https?:\/\//, "")}</span>
         <span className="flex gap-4">
           <Link href="/terms">Terms</Link>
           <Link href="/privacy">Privacy</Link>

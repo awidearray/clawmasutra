@@ -10,7 +10,7 @@ import {
   sessionCookieOptions,
 } from "@/lib/auth";
 import { claimAccount } from "@/lib/claim";
-import { SESSION_COOKIE } from "@/lib/config";
+import { SESSION_COOKIE, appUrl } from "@/lib/config";
 import { connectorFeed, listConnectors, setConnector } from "@/lib/connectors";
 import type { AppDb } from "@/lib/db";
 import {
@@ -28,7 +28,8 @@ import {
   unmatch,
   updateProfile,
 } from "@/lib/dating";
-import { unauthorized } from "@/lib/errors";
+import { deleteAccount } from "@/lib/account";
+import { badRequest, unauthorized } from "@/lib/errors";
 import { rateLimit } from "@/lib/rate-limit";
 import {
   claimInput,
@@ -119,7 +120,13 @@ export async function handleHumanRequest(req: Request, ctx: Ctx): Promise<Respon
         profile: actor.profile,
         keys: await listAgentKeys(db, actor.user.id),
         inbox: await inbox(db, actor),
+        inviteUrl: `${appUrl()}/signup?from=${actor.profile.id}`,
       });
+    }
+
+    if (method === "DELETE" && path === "/api/me") {
+      await deleteAccount(db, actor.user.id);
+      return clearSession(json({ ok: true }));
     }
 
     if (method === "PATCH" && path === "/api/profile") {
@@ -175,7 +182,7 @@ export async function handleHumanRequest(req: Request, ctx: Ctx): Promise<Respon
 
     if (method === "POST" && /\/api\/dates\/[^/]+\/decide$/.test(path)) {
       const body = (await readJson(req)) as { decision?: "confirmed" | "declined" | "cancelled" };
-      if (!body.decision) throw unauthorized("decision required");
+      if (!body.decision) throw badRequest("decision required");
       return json(await decideDate(db, actor, path.split("/")[3], body.decision, ctx.now));
     }
 

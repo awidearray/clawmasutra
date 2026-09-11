@@ -62,6 +62,7 @@ export async function applyMigrations(client: Sql): Promise<void> {
 }
 
 export async function pingDb(): Promise<boolean> {
+  if (!process.env.DATABASE_URL && !sql) return false;
   const rows = await getSql()`SELECT 1 AS ok`;
-  return rows[0]?.ok === 1;
+  return Number(rows[0]?.ok) === 1;
 }

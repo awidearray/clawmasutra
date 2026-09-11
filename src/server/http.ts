@@ -1,4 +1,6 @@
+import { isProduction } from "@/lib/config";
 import { AppError } from "@/lib/errors";
+import { logEvent } from "@/lib/log";
 
 export function json(data: unknown, status = 200): Response {
   return Response.json(data, { status });
@@ -6,11 +8,15 @@ export function json(data: unknown, status = 200): Response {
 
 export function errorResponse(err: unknown): Response {
   if (err instanceof AppError) {
+    if (err.status >= 500) {
+      logEvent("error", err.message, { code: err.code, status: err.status });
+    }
     return json({ error: err.message, code: err.code }, err.status);
   }
   const message = err instanceof Error ? err.message : "Internal error";
-  console.error(err);
-  return json({ error: message, code: "internal" }, 500);
+  logEvent("error", "unhandled", { err: message });
+  const publicMessage = isProduction() ? "Internal error" : message;
+  return json({ error: publicMessage, code: "internal" }, 500);
 }
 
 export async function readJson(req: Request): Promise<unknown> {

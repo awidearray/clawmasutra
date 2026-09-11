@@ -2,6 +2,7 @@
 
 import { api } from "@/components/api";
 import { Button, Field } from "@/components/ui";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export function ProfileForm({
@@ -29,6 +30,7 @@ export function ProfileForm({
     prompts: { question: string; answer: string }[];
   };
 }) {
+  const router = useRouter();
   const [error, setError] = useState("");
   const [saved, setSaved] = useState("");
 
@@ -158,8 +160,19 @@ export function ProfileForm({
       </label>
       {error ? <p className="text-[#e8b4b8]">{error}</p> : null}
       {saved ? <p className="text-[#c9a36a]">{saved}</p> : null}
-      <div>
+      <div className="flex flex-wrap gap-3 md:col-span-2">
         <Button type="submit">Save</Button>
+        <Button
+          tone="blood"
+          onClick={async () => {
+            if (!window.confirm("Delete this account and every match, message, and key?")) return;
+            await api("/api/me", { method: "DELETE" });
+            router.push("/");
+            router.refresh();
+          }}
+        >
+          Delete account
+        </Button>
       </div>
     </form>
   );
