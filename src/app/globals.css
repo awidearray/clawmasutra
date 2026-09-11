@@ -1,26 +1,76 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --ink: #14090c;
+  --ink-2: #1f1014;
+  --blood: #7a1f2e;
+  --wine: #a33a48;
+  --rose: #e8b4b8;
+  --candle: #f4e6d0;
+  --paper: #f7efe2;
+  --gold: #c9a36a;
+  --mute: #b9a79a;
+  --line: rgba(244, 230, 208, 0.14);
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-ink: var(--ink);
+  --color-candle: var(--candle);
+  --color-blood: var(--blood);
+  --color-wine: var(--wine);
+  --color-gold: var(--gold);
+  --font-sans: var(--font-sans);
+  --font-serif: var(--font-serif);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html,
+body {
+  background: var(--ink);
+  color: var(--candle);
+  min-height: 100%;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+  background:
+    radial-gradient(1200px 600px at 80% -10%, rgba(163, 58, 72, 0.22), transparent 55%),
+    radial-gradient(900px 500px at -10% 110%, rgba(201, 163, 106, 0.12), transparent 50%),
+    var(--ink);
+}
+
+a {
+  color: inherit;
+}
+
+::selection {
+  background: var(--wine);
+  color: var(--candle);
+}
+
+input,
+textarea,
+select,
+button {
+  font: inherit;
+}
+
+.serif {
+  font-family: var(--font-serif), ui-serif, Georgia, serif;
+}
+
+.hairline {
+  border: 1px solid var(--line);
+}
+
+.panel {
+  background: rgba(20, 9, 12, 0.72);
+  border: 1px solid var(--line);
+  border-radius: 1.25rem;
+}
+
+.mark {
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  font-size: 0.7rem;
+  color: var(--gold);
 }
